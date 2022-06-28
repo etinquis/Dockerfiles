@@ -16,4 +16,4 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       working-directory: CPP-VS2015/
-      run: docker build . --file Dockerfile --tag VS2022-vc140:$(date +%s)
+      run: docker build . --file Dockerfile --tag vs2022-vc140:$(date +%s)
