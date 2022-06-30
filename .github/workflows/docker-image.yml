@@ -16,7 +16,7 @@ on:
 
 jobs:
 
-  build:
+  build-vs2022-vc140:
 
     runs-on: windows-2019
     permissions:
@@ -41,3 +41,29 @@ jobs:
       run: docker build . --file Dockerfile --tag ghcr.io/etinquis/vs2022-vc140:latest
     - name: Push container
       run: docker push ghcr.io/etinquis/vs2022-vc140:latest
+
+  build-android-ndk:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    # Login against a Docker registry except on PR
+    # https://github.com/docker/login-action
+    - name: Log into registry ${{ env.REGISTRY }}
+      if: github.event_name != 'pull_request'
+      uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Build the Docker image
+      working-directory: CPP-AndroidNDK/
+      run: docker build . --file Dockerfile --tag ghcr.io/etinquis/android-ndk:latest
+    - name: Push container
+      run: docker push ghcr.io/etinquis/android-ndk:latest
